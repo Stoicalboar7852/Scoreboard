@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Score Controller 3</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background-color: black; color: white; }
+    .button { font-size: 1.5em; margin: 5px; padding: 8px 15px; border-radius: 10px; }
+    .increase { background-color: green; color: white; font-size: 2em; padding: 10px 30px; }
+    .decrease { background-color: red; color: white; font-size: 2em; padding: 10px 30px; }
+    .timer { background-color: blue; color: white; }
+    .reset { background-color: gray; color: white; position: absolute; top: 10px; left: 10px; font-size: 1.5em; padding: 8px 20px; }
+    .container { display: flex; justify-content: center; align-items: center; gap: 20px; }
+    .team { text-align: center; }
+    .score-container { display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .team-container { display: flex; justify-content: center; align-items: center; gap: 40px; }
+    input { font-size: 1.2em; padding: 5px 10px; }
+    .score { font-size: 4em; }
+    #controller-timer { font-size: 3em; color: orange; margin-top: 20px; } /* Timer styling */
+  </style>
+</head>
+<body>
+  <h1>Score Controller 3</h1>
+
+  <div>
+    <input id="team1Name" type="text" placeholder="Team 1 Name" />
+    <input id="team2Name" type="text" placeholder="Team 2 Name" />
+    <button class="button" onclick="setTeamNames()">Set Team Names</button>
+  </div>
+  
+  <div class="container team-container">
+    <div class="team">
+      <h2 id="team1Header">Team 1</h2>
+      <div id="score1" class="score">0</div>
+      <div class="score-container">
+        <button class="button increase" onclick="changeScore(1, 'team1')">+1</button>
+        <button class="button decrease" onclick="changeScore(-1, 'team1')">-1</button>
+      </div>
+    </div>
+    <div class="team">
+      <h2 id="team2Header">Team 2</h2>
+      <div id="score2" class="score">0</div>
+      <div class="score-container">
+        <button class="button increase" onclick="changeScore(1, 'team2')">+1</button>
+        <button class="button decrease" onclick="changeScore(-1, 'team2')">-1</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h2>Timer</h2>
+    <button class="button timer" onclick="setTimer(20)">Set Timer to 20 Minutes</button>
+    <button class="button timer" onclick="setTimer(13)">Set Timer to 13 Minutes</button>
+    <button class="button timer" onclick="startTimer()">Start Timer</button>
+    <button class="button timer" onclick="resetTimer()">Reset Timer</button>
+  </div>
+  
+  <div id="controller-timer">00:00</div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('/scoreboard3'); // Connect to namespace scoreboard3
+
+    const team1Header = document.getElementById('team1Header');
+    const team2Header = document.getElementById('team2Header');
+    const score1Display = document.getElementById('score1');
+    const score2Display = document.getElementById('score2');
+    const controllerTimerDisplay = document.getElementById('controller-timer');
+
+    // Change score
+    function changeScore(delta, team) {
+      socket.emit('changeScore', { delta, team });
+    }
+
+    // Set team names
+    function setTeamNames() {
+      const team1Name = document.getElementById('team1Name').value;
+      const team2Name = document.getElementById('team2Name').value;
+      socket.emit('setTeamNames', { team1: team1Name, team2: team2Name });
+    }
+
+    // Set timer
+    function setTimer(minutes) {
+      socket.emit('setTimer', minutes * 60);
+    }
+
+    // Start timer
+    function startTimer() {
+      socket.emit('startTimer');
+    }
+
+    // Reset timer
+    function resetTimer() {
+      socket.emit('resetTimer');
+    }
+
+    // Handle score updates
+    socket.on('scoreUpdate', (scores) => {
+      score1Display.textContent = scores.team1;
+      score2Display.textContent = scores.team2;
+    });
+
+    // Handle timer updates
+    socket.on('timerUpdate', (time) => {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      controllerTimerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    });
+
+    // Handle team name updates
+    socket.on('teamNameUpdate', ({ team1, team2 }) => {
+      team1Header.textContent = team1;
+      team2Header.textContent = team2;
+    });
+  </script>
+</body>
+</html>
