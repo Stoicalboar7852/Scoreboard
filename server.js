@@ -101,7 +101,7 @@ function setupNamespace(namespace, scoreboard) {
 setupNamespace('scoreboard1', scoreboards.scoreboard1);
 setupNamespace('scoreboard2', scoreboards.scoreboard2);
 setupNamespace('scoreboard3', scoreboards.scoreboard3);
-setupNamespace('scoreboard4', scoreboards.scoreboard4);
+setupNamespace('scoreboard4', scoreboards.scoreboard4);533
 
 server.listen(3000, () => {
   console.log('Server is running on port 3000');

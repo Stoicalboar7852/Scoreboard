@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Scoreboard 1</title>
+  <title>pairs 2</title>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; background-color: black; color: white; }
     .score { font-size: 7.5em; margin: 20px; }
@@ -14,25 +14,11 @@
   </style>
 </head>
 <body>
-  <h1>Scoreboard 1</h1>
-  <div class="container">
-    <div class="team">
-      <h2 id="team1Name">Team 1</h2>
-      <div id="score1" class="score">0</div>
-    </div>
-    <div>
-      <h2>Timer</h2>
-      <iframe src="LINK"></iframe>
-    </div>
-    <div class="team">
-      <h2 id="team2Name">Team 2</h2>
-      <div id="score2" class="score">0</div>
-    </div>
-  </div>
+    <div id="timer">00:00</div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io('/scoreboard1'); // Connect to namespace for scoreboard1
+    const socket = io('/scoreboard1'); // Connect to namespace for scoreboard2
 
     const team1NameDiv = document.getElementById('team1Name');
     const team2NameDiv = document.getElementById('team2Name');
