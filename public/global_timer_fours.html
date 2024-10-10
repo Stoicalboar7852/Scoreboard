@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>pairs 2</title>
+  <title>fours</title>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; background-color: black; color: white; }
     .score { font-size: 7.5em; margin: 20px; }
+    .button { font-size: 1.5em; margin: 5px; padding: 8px 15px; border-radius: 10px; }
+    .timer { background-color: blue; color: white; }
     .container { display: flex; justify-content: center; align-items: center; gap: 50px; }
     #timer { font-size: 4.5em; color: orange; }
     h1 { color: purple; font-size: 3.75em; }
@@ -16,21 +18,20 @@
 <body>
     <div id="timer">00:00</div>
 
+    <div>
+      <h2>Timer</h2>
+      <button class="button timer" onclick="setTimer(20)">Set Timer to 20 Minutes</button>
+      <button class="button timer" onclick="setTimer(13)">Set Timer to 13 Minutes</button>
+      <button class="button timer" onclick="startTimer()">Start Timer</button>
+      <button class="button timer" onclick="resetTimer()">Reset Timer</button>
+    </div>
+  
+
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io('/scoreboard1'); // Connect to namespace for scoreboard2
 
-    const team1NameDiv = document.getElementById('team1Name');
-    const team2NameDiv = document.getElementById('team2Name');
-    const score1Div = document.getElementById('score1');
-    const score2Div = document.getElementById('score2');
     const timerDiv = document.getElementById('timer');
-
-    // Listen for score updates
-    socket.on('scoreUpdate', (scores) => {
-      score1Div.textContent = scores.team1;
-      score2Div.textContent = scores.team2;
-    });
 
     // Listen for timer updates
     socket.on('timerUpdate', (time) => {
@@ -38,12 +39,22 @@
       const seconds = time % 60;
       timerDiv.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     });
+    
+    // Set timer
+    function setTimer(minutes) {
+      socket.emit('setTimer', minutes * 60);
+    }
 
-    // Listen for team name updates
-    socket.on('teamNameUpdate', ({ team1, team2 }) => {
-      team1NameDiv.textContent = team1;
-      team2NameDiv.textContent = team2;
-    });
+    // Start timer
+    function startTimer() {
+      socket.emit('startTimer');
+    }
+
+    // Reset timer
+    function resetTimer() {
+      socket.emit('resetTimer');
+    }
+
   </script>
 </body>
 </html>
