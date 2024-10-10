@@ -82,6 +82,17 @@ function setupNamespace(namespace, scoreboard) {
       io.of(`/${namespace}`).emit('timerUpdate', scoreboard.timer);
     });
 
+    socket.on('resetAllTimers', () => {
+      clearInterval(scoreboard.timerInterval);
+      scoreboard.timerInterval = null;
+      scoreboard.timer = 0;
+      io.of(`/Scoreboard1`).emit('resetTimer');
+      io.of(`/Scoreboard1`).emit('timerUpdate', scoreboard.timer);
+      io.of(`/Scoreboard2`).emit('resetTimer');
+      io.of(`/Scoreboard2`).emit('timerUpdate', scoreboard.timer);
+      console.log('reset all timers')
+    });
+
     // Handle score reset
     socket.on('resetScores', () => {
       scoreboard.scores = { team1: 0, team2: 0 };

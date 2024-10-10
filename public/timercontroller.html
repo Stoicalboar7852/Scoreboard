@@ -16,11 +16,21 @@
   </style>
 </head>
 <body>
-    <div id="timer">00:00</div>  
+    <h2>Fours</h2>
+    <div id="timer">00:00</div>
+
+    <div>
+      <button class="button timer" onclick="setTimer(20)">Set Timer to 20 Minutes</button>
+      <button class="button timer" onclick="setTimer(13)">Set Timer to 13 Minutes</button>
+      <button class="button timer" onclick="startTimer()">Start Timer</button>
+      <button class="button timer" onclick="resetTimer()">Reset Timer</button>
+      <button class="button timer" onclick="resetAllTimers()">Reset All Timers</button>
+    </div>
+  
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io('/scoreboard1'); // Connect to namespace for scoreboard2
+    const socket = io('/scoreboard1'); // Connect to namespace
 
     const timerDiv = document.getElementById('timer');
 
@@ -30,6 +40,27 @@
       const seconds = time % 60;
       timerDiv.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     });
+    
+    // Set timer
+    function setTimer(minutes) {
+      socket.emit('setTimer', minutes * 60);
+    }
+
+    // Start timer
+    function startTimer() {
+      socket.emit('startTimer');
+    }
+
+    // Reset timer
+    function resetTimer() {
+      socket.emit('resetTimer');
+    }
+
+    // Reset timer
+    function resetAllTimers() {
+      socket.emit('resetAllTimers');
+    }
+
   </script>
 </body>
 </html>
