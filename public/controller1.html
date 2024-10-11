@@ -49,15 +49,11 @@
 
   <div>
     <h2>Timer</h2>
-    <button class="button timer" onclick="setTimer(20)">Set Timer to 20 Minutes</button>
-    <button class="button timer" onclick="setTimer(13)">Set Timer to 13 Minutes</button>
-    <button class="button timer" onclick="startTimer()">Start Timer</button>
-    <button class="button timer" onclick="resetTimer()">Reset Timer</button>
   </div>
   
-  <div id="controller-timer">00:00</div>
-
-  <script src="/socket.io/socket.io.js"></script>
+<iframe id="timerDisplay" width="200" height="100" frameborder="0" src="global_timer_fours.html"></iframe>
+  
+<script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io('/scoreboard1'); // Connect to namespace scoreboard1
 
