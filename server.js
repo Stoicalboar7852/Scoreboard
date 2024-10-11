@@ -82,17 +82,6 @@ function setupNamespace(namespace, scoreboard) {
       io.of(`/${namespace}`).emit('timerUpdate', scoreboard.timer);
     });
 
-    socket.on('resetAllTimers', () => {
-      clearInterval(scoreboard.timerInterval);
-      scoreboard.timerInterval = null;
-      scoreboard.timer = 0;
-      io.of(`/Scoreboard1`).emit('resetTimer');
-      io.of(`/Scoreboard1`).emit('timerUpdate', scoreboard.timer);
-      io.of(`/Scoreboard2`).emit('resetTimer');
-      io.of(`/Scoreboard2`).emit('timerUpdate', scoreboard.timer);
-      console.log('reset all timers')
-    });
-
     // Handle score reset
     socket.on('resetScores', () => {
       scoreboard.scores = { team1: 0, team2: 0 };
@@ -104,6 +93,16 @@ function setupNamespace(namespace, scoreboard) {
       // Update the team names in the server
       scoreboard.teamNames = { team1: team1 || 'Team 1', team2: team2 || 'Team 2' };
       io.of(`/${namespace}`).emit('teamNameUpdate', scoreboard.teamNames);
+    });
+
+    // Handle Fours Timer Setting
+    socket.on('chooseFoursTimer', () => {
+      io.of(`/${namespace}`).emit('foursTimerUpdate');
+    });
+
+    // Handle Pairs Timer Setting
+    socket.on('choosePairsTimer', () => {
+      io.of(`/${namespace}`).emit('pairsTimerUpdate');
     });
   });
 }

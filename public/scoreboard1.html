@@ -17,46 +17,89 @@
   <h1>Scoreboard 1</h1>
   <div class="container">
     <div class="team">
-      <h2 id="team1Name">Team 1</h2>
+      <h2 id="team1Header">Team 1</h2>
       <div id="score1" class="score">0</div>
     </div>
     <div>
       <h2>Timer</h2>
-      <iframe src="LINK"></iframe>
+      <iframe id="timerDisplay" width="200" height="100" frameborder="0" src="global_timer_fours.html"></iframe>
     </div>
     <div class="team">
-      <h2 id="team2Name">Team 2</h2>
+      <h2 id="team2Header">Team 2</h2>
       <div id="score2" class="score">0</div>
     </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io('/scoreboard1'); // Connect to namespace for scoreboard1
+    const socket = io('/scoreboard1'); // Connect to namespace scoreboard1
 
-    const team1NameDiv = document.getElementById('team1Name');
-    const team2NameDiv = document.getElementById('team2Name');
-    const score1Div = document.getElementById('score1');
-    const score2Div = document.getElementById('score2');
-    const timerDiv = document.getElementById('timer');
+    const team1Header = document.getElementById('team1Header');
+    const team2Header = document.getElementById('team2Header');
+    const score1Display = document.getElementById('score1');
+    const score2Display = document.getElementById('score2');
+    const controllerTimerDisplay = document.getElementById('controller-timer');
 
-    // Listen for score updates
+    // Change score
+    function changeScore(delta, team) {
+      socket.emit('changeScore', { delta, team });
+    }
+
+    // Set team names
+    function setTeamNames() {
+      const team1Name = document.getElementById('team1Name').value;
+      const team2Name = document.getElementById('team2Name').value;
+      socket.emit('setTeamNames', { team1: team1Name, team2: team2Name });
+    }
+
+    function choosePairsTimer() {
+      socket.emit('choosePairsTimer');
+    }
+
+    function chooseFoursTimer() {
+      socket.emit('chooseFoursTimer');
+    }
+
+    // Set timer
+    function setTimer(minutes) {
+      socket.emit('setTimer', minutes * 60);
+    }
+
+    // Start timer
+    function startTimer() {
+      socket.emit('startTimer');
+    }
+
+    // Reset timer
+    function resetTimer() {
+      socket.emit('resetTimer');
+    }
+
+    // Handle score updates
     socket.on('scoreUpdate', (scores) => {
-      score1Div.textContent = scores.team1;
-      score2Div.textContent = scores.team2;
+      score1Display.textContent = scores.team1;
+      score2Display.textContent = scores.team2;
     });
 
-    // Listen for timer updates
+    // Handle timer updates
     socket.on('timerUpdate', (time) => {
       const minutes = Math.floor(time / 60);
       const seconds = time % 60;
-      timerDiv.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      controllerTimerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     });
 
-    // Listen for team name updates
+    // Handle team name updates
     socket.on('teamNameUpdate', ({ team1, team2 }) => {
-      team1NameDiv.textContent = team1;
-      team2NameDiv.textContent = team2;
+      team1Header.textContent = team1;
+      team2Header.textContent = team2;
+    });
+
+    socket.on('foursTimerUpdate', () => {
+      document.getElementById("timerDisplay").src = "global_timer_fours.html";
+    });
+
+    socket.on('pairsTimerUpdate', () => {
+      document.getElementById("timerDisplay").src = "global_timer_pairs.html";
     });
   </script>
 </body>
