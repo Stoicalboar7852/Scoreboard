@@ -9,7 +9,8 @@
     .increase { background-color: green; color: white; font-size: 2em; padding: 10px 30px; }
     .decrease { background-color: red; color: white; font-size: 2em; padding: 10px 30px; }
     .timer { background-color: blue; color: white; }
-    .reset { background-color: gray; color: white; position: absolute; top: 10px; left: 10px; font-size: 1.5em; padding: 8px 20px; }
+    .general { background-color: blue; color: white; }
+    .reset { background-color: blue; color: white; position: absolute; top: 10px; left: 10px; font-size: 1.5em; padding: 8px 20px; }
     .container { display: flex; justify-content: center; align-items: center; gap: 20px; }
     .team { text-align: center; }
     .score-container { display: flex; justify-content: center; align-items: center; gap: 10px; }
@@ -20,12 +21,13 @@
   </style>
 </head>
 <body>
+  <button class="button reset" onclick="resetScores()">Reset Scores</button>
   <h1>Score Controller 2</h1>
 
   <div>
     <input id="team1Name" type="text" placeholder="Team 1 Name" />
     <input id="team2Name" type="text" placeholder="Team 2 Name" />
-    <button class="button" onclick="setTeamNames()">Set Team Names</button>
+    <button class="button general" onclick="setTeamNames()">Set Team Names</button>
   </div>
   
   <div class="container team-container">
@@ -49,15 +51,13 @@
 
   <div>
     <h2>Timer</h2>
-    <button class="button timer" onclick="setTimer(20)">Set Timer to 20 Minutes</button>
-    <button class="button timer" onclick="setTimer(13)">Set Timer to 13 Minutes</button>
-    <button class="button timer" onclick="startTimer()">Start Timer</button>
-    <button class="button timer" onclick="resetTimer()">Reset Timer</button>
+    <iframe id="timerDisplay" width="200" height="100" frameborder="0" src="global_timer_fours.html"></iframe>
   </div>
-  
-  <div id="controller-timer">00:00</div>
-
-  <script src="/socket.io/socket.io.js"></script>
+  <div>
+    <button class="button timer" onclick="chooseFoursTimer()">Fours Timer</button>
+    <button class="button timer" onclick="choosePairsTimer()">Pairs Timer</button>
+  </div>
+<script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io('/scoreboard2'); // Connect to namespace scoreboard2
 
@@ -72,11 +72,23 @@
       socket.emit('changeScore', { delta, team });
     }
 
+    function resetScores() {
+      socket.emit('resetScores');
+    }
+
     // Set team names
     function setTeamNames() {
       const team1Name = document.getElementById('team1Name').value;
       const team2Name = document.getElementById('team2Name').value;
       socket.emit('setTeamNames', { team1: team1Name, team2: team2Name });
+    }
+
+    function choosePairsTimer() {
+      socket.emit('choosePairsTimer');
+    }
+
+    function chooseFoursTimer() {
+      socket.emit('chooseFoursTimer');
     }
 
     // Set timer
@@ -111,6 +123,14 @@
     socket.on('teamNameUpdate', ({ team1, team2 }) => {
       team1Header.textContent = team1;
       team2Header.textContent = team2;
+    });
+
+    socket.on('foursTimerUpdate', () => {
+      document.getElementById("timerDisplay").src = "global_timer_fours.html";
+    });
+
+    socket.on('pairsTimerUpdate', () => {
+      document.getElementById("timerDisplay").src = "global_timer_pairs.html";
     });
   </script>
 </body>
