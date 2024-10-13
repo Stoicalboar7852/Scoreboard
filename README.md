@@ -5,6 +5,7 @@ The intended use case is for there to be 1 server that is always on and then thr
 
 *PLEASE NOTE*
 This project is unfinished, so many things aren't implemented yet or don't work yet.
+There is also some useless code in some of the files which does nothing. This is because I didn't start the files from scratch, and many I duplicated and already setup file and then edited it to how it was needed. I do plan on removing this unused code when I am done and the project releases.
 
 Dependencies:
 Requires node js to be installed
