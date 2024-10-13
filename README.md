@@ -3,6 +3,9 @@ A scoreboard system for 4 soreboards and 4 controllers
 
 The intended use case is for there to be 1 server that is always on and then through either the use of other computers or some other means, display the scoreboard webpage on a tv or other big screen. You can use whatever device to update the scores on, but iPads do work well for this.
 
+*PLEASE NOTE*
+This project is unfinished, so many things aren't implemented yet or don't work yet.
+
 Dependencies:
 Requires node js to be installed
 https://nodejs.org/en/download/prebuilt-installer
