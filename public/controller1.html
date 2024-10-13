@@ -20,6 +20,7 @@
     #controller-timer { font-size: 3em; color: orange; margin-top: 20px; } /* Timer styling */
   </style>
 </head>
+<button class="button general" onclick="resetScores()">Reset Scores</button>
 <body>
   <h1>Score Controller 1</h1>
 
@@ -69,6 +70,10 @@
     // Change score
     function changeScore(delta, team) {
       socket.emit('changeScore', { delta, team });
+    }
+
+    function resetScores() {
+      socket.emit('resetScores');
     }
 
     // Set team names

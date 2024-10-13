@@ -52,6 +52,12 @@ function setupNamespace(namespace, scoreboard) {
       io.of(`/${namespace}`).emit('scoreUpdate', scoreboard.scores);
     });
 
+    // Handle score reseting
+    socket.on('resetScores', () => {
+      scoreboard.scores["team1"] -= scoreboard.scores["team1"];
+      io.of(`/${namespace}`).emit('scoreUpdate', scoreboard.scores);
+    });
+
     // Handle timer setting
     socket.on('setTimer', (time) => {
       scoreboard.timer = time;
